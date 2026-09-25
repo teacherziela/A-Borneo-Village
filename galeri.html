@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#245b45">
+<title>Galeri Murid | A Borneo Village</title>
+<style>
+:root{color-scheme:light;--ink:#203e33;--green:#245b45;--cream:#fffdf7}
+*{box-sizing:border-box}body{margin:0;background:#f5f6ed;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.6}a{color:inherit}button,select{font:inherit}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #99551d;outline-offset:5px}
+header{background:var(--green);color:white;padding:24px max(22px,calc((100% - 1120px)/2)) 56px;position:relative}nav{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}nav a{text-decoration:none;font-size:.9rem}nav b{letter-spacing:.08em;font-size:.8rem}.eyebrow{margin:48px 0 8px;color:#e9cf88;letter-spacing:.15em;font-size:.75rem;font-weight:800}h1{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.1;margin:0 0 20px;letter-spacing:-.04em}.intro{max-width:580px;color:#e0ece3;margin:0}.leaf{font-size:2rem}
+main{max-width:1164px;margin:auto;padding:0 22px 60px}.toolbar{position:relative;margin-top:-24px;background:var(--cream);padding:22px 26px;border:1px solid #dce4d5;border-radius:18px;box-shadow:0 8px 22px #203e3309;display:flex;align-items:end;gap:18px;flex-wrap:wrap}label{font-size:.8rem;font-weight:750;display:block;margin-bottom:6px}select{min-width:210px;max-width:100%;padding:10px 34px 10px 12px;border:1px solid #9baa9e;border-radius:8px;background:white;color:var(--ink)}button{cursor:pointer;border:1px solid #b2c3b5;border-radius:8px;padding:10px 16px;background:#edf3e9;color:var(--green);font-weight:650}button:disabled{cursor:wait;opacity:.6}.count{margin-left:auto;margin-bottom:10px;font-size:.85rem;color:#53655a}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:22px;margin-top:28px}.card{background:var(--cream);border:1px solid #dbe3d5;border-radius:16px;padding:24px;display:flex;flex-direction:column;min-width:0;overflow-wrap:anywhere;border-top:5px solid #8eb796}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.badge{background:#e8efdf;border-radius:30px;padding:4px 12px;font-size:.8rem;font-weight:750}.motif{color:#62856e;font-size:1.4rem}.card h2{font-size:1.35rem;line-height:1.35;margin:22px 0 18px}.card dl{margin:0 0 24px}.card dt{font-size:.73rem;color:#586a5d;letter-spacing:.05em;text-transform:uppercase;margin-top:12px}.card dd{margin:2px 0;font-size:.95rem}.result{margin-top:auto;text-decoration:none;background:var(--green);color:white;padding:12px 16px;border-radius:8px;text-align:center;font-weight:700;font-size:.85rem}.result:hover{background:#193f30}.unavailable{font-size:.85rem;color:#667164;margin-top:auto}.state{text-align:center;padding:60px 20px;color:#526458}.state strong{display:block;font-size:1.1rem;color:var(--ink);margin-bottom:8px}[hidden]{display:none!important}footer{text-align:center;padding:24px;color:#607163;font-size:.8rem;border-top:1px solid #dce4d5}@media(max-width:500px){.toolbar{padding:18px;align-items:stretch}.filter{width:100%}select{width:100%}.count{margin:auto 0 auto auto}header{padding-bottom:50px}.eyebrow{margin-top:36px}}
+</style>
+</head>
+<body>
+<header>
+<nav aria-label="Navigasi utama"><b>🌿 A BORNEO VILLAGE</b><a href="index.html">← Kembali ke tugasan</a></nav>
+<p class="eyebrow">SEJARAH TINGKATAN 2 · BAB 10</p>
+<h1>Galeri Murid<span class="leaf" aria-hidden="true"> 🌴</span></h1>
+<p class="intro">Kenali masyarakat Sabah dan Sarawak melalui perkampungan digital hasil kreativiti rakan-rakan kamu.</p>
+</header>
+<main>
+<div class="toolbar">
+<div class="filter"><label for="kelas">Teroka mengikut kelas</label><select id="kelas" disabled><option value="">Semua kelas</option></select></div>
+<button id="refresh" type="button">Muat semula</button>
+<span id="count" class="count" role="status" aria-live="polite"></span>
+</div>
+<div id="state" class="state" role="status" aria-live="polite">Sedang memuatkan hasil kajian…</div>
+<div id="cards" class="grid" aria-label="Hasil kajian murid" aria-busy="true"></div>
+<noscript><p>Aktifkan JavaScript dalam pelayar untuk melihat galeri murid.</p></noscript>
+</main>
+<footer>🌿 Design A Borneo Village · Kajian Kes Individu Bab 10</footer>
+<script>
+'use strict';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyF-6ORkgiyv-Y_y-cdv6aG41kZ1Q2cOnMrD4TFutQ4pVTjHOmSgpQV6IKgmR3wunHDCg/exec';
+const cards=document.getElementById('cards'), state=document.getElementById('state'), select=document.getElementById('kelas'), count=document.getElementById('count'), refresh=document.getElementById('refresh');
+let records=[];
+function canvaLink(value){
+  try{const u=new URL(value);return u.protocol==='https:' && !u.username && !u.password && (u.hostname==='canva.com'||u.hostname.endsWith('.canva.com')||u.hostname==='canva.link'||u.hostname.endsWith('.canva.link')) ? u.href : null;}catch{return null;}
+}
+function element(tag,text,className){const el=document.createElement(tag);el.textContent=text;if(className)el.className=className;return el;}
+function render(){
+  cards.replaceChildren();
+  const shown=records.filter(row=>!select.value||row.kelas===select.value);
+  count.textContent=shown.length+' hasil kajian';
+  state.hidden=shown.length>0;
+  state.textContent=records.length?'Belum ada hasil untuk kelas ini.':'Belum ada hasil kajian dikongsikan. Jadilah yang pertama!';
+  const fragment=document.createDocumentFragment();
+  for(const row of shown){
+    const card=element('article','','card'),top=element('div','','card-top');
+    const motif=element('span','❧','motif');motif.setAttribute('aria-hidden','true');
+    top.append(element('span',row.kelas||'Kelas tidak dinyatakan','badge'),motif);
+    card.append(top,element('h2',row.nama));
+    const details=document.createElement('dl');
+    for(const [label,value] of [['Masyarakat',row.masyarakat],['Tarikh hantar',row.tarikh]])details.append(element('dt',label),element('dd',value||'—'));
+    card.append(details);
+    const url=canvaLink(row.link);
+    if(url){const a=element('a','Lihat Hasil Canva ↗','result');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','Lihat Hasil Canva — '+row.nama+' (tab baharu)');card.append(a);}
+    else card.append(element('p','Pautan Canva belum tersedia.','unavailable'));
+    fragment.append(card);
+  }
+  cards.append(fragment);
+}
+async function load(){
+  refresh.disabled=true;select.disabled=true;cards.setAttribute('aria-busy','true');cards.replaceChildren();count.textContent='';state.hidden=false;state.textContent='Sedang memuatkan hasil kajian…';
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+  try{
+    const response=await fetch(SCRIPT_URL+'?action=gallery',{signal:controller.signal,redirect:'follow',credentials:'omit',cache:'no-store'});
+    if(!response.ok)throw new Error('HTTP');
+    const payload=await response.json();
+    if(payload.ok!==true||!Array.isArray(payload.data))throw new Error('DATA');
+    records=payload.data.filter(r=>r&&typeof r==='object'&&String(r.nama||'').trim()).map(r=>Object.fromEntries(['nama','kelas','masyarakat','tarikh','link'].map(k=>[k,String(r[k]||'').trim()])));
+    const previous=select.value;select.replaceChildren(new Option('Semua kelas',''));
+    [...new Set(records.map(r=>r.kelas).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ms',{numeric:true})).forEach(k=>select.add(new Option(k,k)));
+    if([...select.options].some(o=>o.value===previous))select.value=previous;
+    select.disabled=false;render();
+  }catch{
+    records=[];count.textContent='';state.hidden=false;state.replaceChildren(element('strong','Galeri belum dapat dimuatkan.'),document.createTextNode('Cuba tekan “Muat semula” sebentar lagi.'));
+  }finally{clearTimeout(timer);refresh.disabled=false;cards.setAttribute('aria-busy','false');}
+}
+select.addEventListener('change',render);refresh.addEventListener('click',load);load();
+</script>
+</body>
+</html>
