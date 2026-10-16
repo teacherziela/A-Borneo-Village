@@ -78,7 +78,7 @@ label{font-weight:800;display:block;margin:14px 0 6px}input,select{width:100%;pa
 <option>2 Adil</option><option>2 Ehsan</option><option>2 Gigih</option><option>2 Rasional</option><option>2 Progresif</option><option>2 Dedikasi</option><option>2 Cendekia</option><option>2 Usaha</option><option>2 Murni</option><option>2 Yakin</option><option>2 Tekun</option>
 </select>
 <label>Masyarakat yang dikaji</label><input name="masyarakat" required placeholder="Contoh: Iban / Kadazandusun / Bajau">
-<label>Link Canva</label><input name="link" type="url" required placeholder="https://www.canva.com/...">
+<label>Kaedah penghantaran</label><select id="cara" required><option value="canva">Pautan Canva</option><option value="fail">PDF atau imej (JPG/PNG)</option></select><div id="canvaInput"><label>Link Canva</label><input name="link" id="linkCanva" type="url" required placeholder="https://www.canva.com/..."></div><div id="failInput" hidden><label>Pilih PDF atau gambar</label><input id="hasilFail" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"><p class="small">Maksimum 5 MB. Fail akan disimpan di Google Drive cikgu selepas sambungan diaktifkan.</p></div>
 <button class="btn green" type="submit">🚀 Hantar Sekarang</button>
 <div id="msg"></div>
 </form>
@@ -90,6 +90,8 @@ label{font-weight:800;display:block;margin:14px 0 6px}input,select{width:100%;pa
 /* Selepas deploy Code.gs sebagai Web App, tampal URL /exec di sini. */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyF-6ORkgiyv-Y_y-cdv6aG41kZ1Q2cOnMrD4TFutQ4pVTjHOmSgpQV6IKgmR3wunHDCg/exec";
 
+const cara=document.getElementById("cara"), canvaInput=document.getElementById("canvaInput"), failInput=document.getElementById("failInput"), linkCanva=document.getElementById("linkCanva"), hasilFail=document.getElementById("hasilFail");
+cara.addEventListener("change",()=>{const file=cara.value==="fail";canvaInput.hidden=file;failInput.hidden=!file;linkCanva.required=!file;hasilFail.required=file;});
 const form = document.getElementById("submitForm");
 const msg = document.getElementById("msg");
 form.addEventListener("submit", async (e)=>{
@@ -99,6 +101,7 @@ form.addEventListener("submit", async (e)=>{
     msg.textContent="⚠️ Sambungan Google Sheet belum diaktifkan. Cikgu perlu tampal URL Web App Apps Script sekali sahaja.";
     return;
   }
+  if(cara.value==="fail"){msg.style.display="block";msg.textContent="⚠️ Muat naik fail belum diaktifkan pada Google Drive. Sila gunakan pautan Canva dahulu.";return;}
   const fd = new FormData(form);
   const body = new URLSearchParams(fd);
   msg.style.display="block"; msg.textContent="⏳ Sedang menghantar...";
