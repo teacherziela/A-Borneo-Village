@@ -69,9 +69,10 @@ async function load(){
     if(!response.ok)throw new Error('HTTP');
     const payload=await response.json();
     if(payload.ok!==true||!Array.isArray(payload.data))throw new Error('DATA');
-    records=payload.data.filter(r=>r&&typeof r==='object'&&String(r.nama||'').trim()).map(r=>Object.fromEntries(['nama','kelas','masyarakat','tarikh','link'].map(k=>[k,String(r[k]||'').trim()])));
+    const allowedClasses=['2 Adil','2 Ehsan','2 Gigih','2 Rasional'];
+    records=payload.data.filter(r=>r&&typeof r==='object'&&String(r.nama||'').trim()&&allowedClasses.includes(String(r.kelas||'').trim())).map(r=>Object.fromEntries(['nama','kelas','masyarakat','tarikh','link'].map(k=>[k,String(r[k]||'').trim()])));
     const previous=select.value;select.replaceChildren(new Option('Semua kelas',''));
-    [...new Set(records.map(r=>r.kelas).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ms',{numeric:true})).forEach(k=>select.add(new Option(k,k)));
+    allowedClasses.forEach(k=>select.add(new Option(k,k)));
     if([...select.options].some(o=>o.value===previous))select.value=previous;
     select.disabled=false;render();
   }catch{
