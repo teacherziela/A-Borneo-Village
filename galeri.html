@@ -36,7 +36,7 @@ const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyF-6ORkgiyv-Y_y-cdv6a
 const cards=document.getElementById('cards'), state=document.getElementById('state'), select=document.getElementById('kelas'), count=document.getElementById('count'), refresh=document.getElementById('refresh');
 let records=[];
 function canvaLink(value){
-  try{const u=new URL(value);return u.protocol==='https:' && !u.username && !u.password && (u.hostname==='canva.com'||u.hostname.endsWith('.canva.com')||u.hostname==='canva.link'||u.hostname.endsWith('.canva.link')) ? u.href : null;}catch{return null;}
+  try{const u=new URL(value);return u.protocol==='https:' && !u.username && !u.password && (u.hostname==='canva.com'||u.hostname.endsWith('.canva.com')||u.hostname==='canva.link'||u.hostname.endsWith('.canva.link')||u.hostname==='drive.google.com') ? u.href : null;}catch{return null;}
 }
 function element(tag,text,className){const el=document.createElement(tag);el.textContent=text;if(className)el.className=className;return el;}
 function render(){
@@ -55,8 +55,8 @@ function render(){
     for(const [label,value] of [['Masyarakat',row.masyarakat],['Tarikh hantar',row.tarikh]])details.append(element('dt',label),element('dd',value||'—'));
     card.append(details);
     const url=canvaLink(row.link);
-    if(url){const a=element('a','Lihat Hasil Canva ↗','result');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','Lihat Hasil Canva — '+row.nama+' (tab baharu)');card.append(a);}
-    else card.append(element('p','Pautan Canva belum tersedia.','unavailable'));
+    if(url){const a=element('a',url.includes('drive.google.com')?'Lihat PDF / Imej ↗':'Lihat Hasil Canva ↗','result');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label','Lihat Hasil Kajian — '+row.nama+' (tab baharu)');card.append(a);}
+    else card.append(element('p','Pautan hasil kajian belum tersedia.','unavailable'));
     fragment.append(card);
   }
   cards.append(fragment);
